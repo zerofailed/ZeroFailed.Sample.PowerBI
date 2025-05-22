@@ -1,13 +1,13 @@
 <#
-This example demonstrates a software build process using the 'ZeroFailed.Build.DotNet' extension
+This example demonstrates a software build process using the 'ZeroFailed.Deploy.PowerBI' extension
 to provide the features needed when building a .NET solutions.
 #>
 
 $zerofailedExtensions = @(
     @{
         # References the extension from its GitHub repository. If not already installed, use latest version from 'main' will be downloaded.
-        Name = "ZeroFailed.Build.DotNet"
-        GitRepository = "https://github.com/zerofailed/ZeroFailed.Build.DotNet"
+        Name = "ZeroFailed.Deploy.PowerBI"
+        GitRepository = "https://github.com/zerofailed/ZeroFailed.Deploy.PowerBI"
         GitRef = "main"
     }
 )
