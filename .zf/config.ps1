@@ -15,66 +15,31 @@ $zerofailedExtensions = @(
 # Load the tasks and process
 . ZeroFailed.tasks -ZfPath $here/.zf
 
-#
-# Build process configuration
-#
-#
-# Build process control options
-#
-$SkipInit = $false
-$SkipVersion = $false
-$SkipBuild = $false
-$CleanBuild = $Clean
-$SkipTest = $false
-$SkipTestReport = $false
-$SkipAnalysis = $false
-$SkipPackage = $false
-
-$SolutionToBuild = (Resolve-Path (Join-Path $here "./src/SampleDotNet.sln")).Path
-$IncludeAssembliesInCodeCoverage = "SampleDotNet*"
-$TargetFrameworkMoniker = "net8.0" # prevent GHA trying to run tests under .NET Framework 4.5 - Linux agents now lack mono
-$ProjectsToPublish = @(
-    # simple syntax for basic publishing features
-    "$here/src/SampleDotNet.Web/SampleDotNet.Web.csproj"
-    "$here/src/SamplePlugin/SamplePlugin.csproj"
-
-    # richer syntax to support multi-target publishing and AOT features
+$cloudConnection = @(
     @{
-        Project = "$here/src/SampleDotNet.Cli/SampleDotNet.Cli.csproj"
-        RuntimeIdentifiers = @("win-x64", "linux-x64")
-        SelfContained = $false
-        SingleFile = $false
-        Trimmed = $false
-        ReadyToRun = $false
+        displayName = "My Shared Cloud Connection"
+        connectionType = "AzureBlobs"
+        parameters = @(
+            @{
+                dataType = "Text"
+                name = "domain"
+                value = "blob.core.windows.net"
+            }
+            @{
+                dataType = "Text"
+                name = "account"
+                value = $DeploymentConfig.storageAccountName
+            }
+        )
+        # servicePrincipalClientId = $app.AppId
+        servicePrincipalSecret = $DeploymentConfig.storageConnectionCloudSecret | ConvertTo-SecureString -AsPlainText
+        tenantId = "0f621c67-98a0-4ed5-b5bd-31a35be41e29"
     }
 )
-$NuSpecFilesToPackage = @(
-    "src/SamplePlugin/SamplePlugin.nuspec"
-)
-
 
 # Customise the build process
-task . FullBuild
-
-#
-# Build Process Extensibility Points - uncomment and implement as required
-#
-
-# task RunFirst {}
-# task PreInit {}
-# task PostInit {}
-# task PreVersion {}
-# task PostVersion {}
-# task PreBuild {}
-# task PostBuild {}
-# task PreTest {}
-# task PostTest {}
-# task PreTestReport {}
-# task PostTestReport {}
-# task PreAnalysis {}
-# task PostAnalysis {}
-# task PrePackage {}
-# task PostPackage {}
-# task PrePublish {}
-# task PostPublish {}
-# task RunLast {}
+task . PreInit, readConfiguration, FullDeployment
+task PreInit { 
+    Install-PSResource -Name Corvus.Deployment -Repository "PSGallery" -Scope CurrentUser -TrustRepository | Out-Null
+    Import-Module Corvus.Deployment
+}
