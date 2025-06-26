@@ -31,6 +31,12 @@ param (
     [Parameter()]
     [string] $EnvironmentConfigName = $Environment,
 
+    [Parameter(Mandatory = $true)]
+    [string] $SubscriptionId,
+
+    [Parameter(Mandatory = $true)]
+    [string] $TenantId,
+
     [Parameter()]
     [string] $ConfigPath,
 

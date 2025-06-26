@@ -32,15 +32,28 @@ $cloudConnection = @(
                 value = $DeploymentConfig.storageAccountName
             }
         )}
-        # servicePrincipalClientId = $app.AppId
-        servicePrincipalSecret = {$DeploymentConfig.storageConnectionCloudSecret | ConvertTo-SecureString -AsPlainText}
-        tenantId = "0f621c67-98a0-4ed5-b5bd-31a35be41e29"
+        servicePrincipalClientId = {$DeploymentConfig.storageConnectionClientId}
+        servicePrincipalSecret = {$DeploymentConfig.storageConnectionCloudSecret}
+        tenantId = $TenantId
     }
 )
 
 # Customise the build process
-task . PreInit, readConfiguration, FullDeployment
+task . PreInit, connect, readConfiguration, FullDeployment
 task PreInit { 
     Install-PSResource -Name Corvus.Deployment -Repository "PSGallery" -Scope CurrentUser -TrustRepository | Out-Null
     Import-Module Corvus.Deployment
+}
+
+task generateSecret {
+    $app = Get-AzADApplication -AppId "639dd748-ac2b-40d3-823d-ed831c79c98f"
+    # Simulate rotating secret
+    $app | Remove-AzADAppCredential
+    # Ordinarily, we would get the secret from the KeyVault, but for this demo, we'll just create a new one.
+    $cred = $app | New-AzADAppCredential
+    $env:STORAGE_CONNECTION_CLOUD_SECRET = $cred.SecretText
+}
+
+task connect {
+    Connect-CorvusAzure -SubscriptionId $SubscriptionId -AadTenantId $TenantId
 }
