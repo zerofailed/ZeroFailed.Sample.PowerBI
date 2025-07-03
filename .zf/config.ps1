@@ -16,27 +16,27 @@ $zerofailedExtensions = @(
 # Load the tasks and process
 . ZeroFailed.tasks -ZfPath $here/.zf
 
-$cloudConnection = @(
-    @{
-        displayName = "My Shared Cloud Connection"
-        connectionType = "AzureBlobs"
-        parameters = {@(
-            @{
-                dataType = "Text"
-                name = "domain"
-                value = "blob.core.windows.net"
-            }
-            @{
-                dataType = "Text"
-                name = "account"
-                value = $DeploymentConfig.storageAccountName
-            }
-        )}
-        servicePrincipalClientId = {$DeploymentConfig.storageConnectionClientId}
-        servicePrincipalSecret = {$DeploymentConfig.storageConnectionCloudSecret}
-        tenantId = $TenantId
-    }
-)
+# $cloudConnection = @(
+#     @{
+#         displayName = "My Shared Cloud Connection"
+#         connectionType = "AzureBlobs"
+#         parameters = {@(
+#             @{
+#                 dataType = "Text"
+#                 name = "domain"
+#                 value = "blob.core.windows.net"
+#             }
+#             @{
+#                 dataType = "Text"
+#                 name = "account"
+#                 value = $DeploymentConfig.storageAccountName
+#             }
+#         )}
+#         servicePrincipalClientId = {$DeploymentConfig.storageConnectionClientId}
+#         servicePrincipalSecret = {$DeploymentConfig.storageConnectionCloudSecret}
+#         tenantId = $TenantId
+#     }
+# )
 
 # Customise the build process
 task . PreInit, connect, readConfiguration, FullDeployment
@@ -45,14 +45,14 @@ task PreInit {
     Import-Module Corvus.Deployment
 }
 
-task generateSecret {
-    $app = Get-AzADApplication -AppId "639dd748-ac2b-40d3-823d-ed831c79c98f"
-    # Simulate rotating secret
-    $app | Remove-AzADAppCredential
-    # Ordinarily, we would get the secret from the KeyVault, but for this demo, we'll just create a new one.
-    $cred = $app | New-AzADAppCredential
-    $env:STORAGE_CONNECTION_CLOUD_SECRET = $cred.SecretText
-}
+# task generateSecret {
+#     $app = Get-AzADApplication -AppId "639dd748-ac2b-40d3-823d-ed831c79c98f"
+#     # Simulate rotating secret
+#     $app | Remove-AzADAppCredential
+#     # Ordinarily, we would get the secret from the KeyVault, but for this demo, we'll just create a new one.
+#     $cred = $app | New-AzADAppCredential
+#     $env:STORAGE_CONNECTION_CLOUD_SECRET = $cred.SecretText
+# }
 
 task connect {
     Connect-CorvusAzure -SubscriptionId $SubscriptionId -AadTenantId $TenantId

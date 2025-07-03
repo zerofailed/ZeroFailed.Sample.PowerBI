@@ -1,0 +1,8 @@
+# Service Principals Configuration
+version: '1.0'
+
+servicePrincipals:
+  development:
+    clientId: 639dd748-ac2b-40d3-823d-ed831c79c98f
+    secretUrl: https://endjintest.vault.azure.net/secrets/jess-cloud-connection-secret/
+    tenantId: 0f621c67-98a0-4ed5-b5bd-31a35be41e29

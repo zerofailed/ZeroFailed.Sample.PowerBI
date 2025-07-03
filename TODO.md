@@ -1,0 +1,1 @@
+Replace the static config of connections and service principals with a convention based file system.
