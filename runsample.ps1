@@ -1,3 +1,4 @@
+$InformationPreference = "Continue"
 ./deploy.ps1 `
     -Environment "dev" `
     -SubscriptionId "98333d29-7302-4f93-a51d-70c49ca7e180" `
