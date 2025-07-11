@@ -10,3 +10,11 @@ connectionTargets:
       - dataType: Text
         name: account
         value: pbicloudconnection
+  sql:
+    dev:
+      - dataType: Text
+        name: database
+        value: gd__conning_tower
+      - dataType: Text
+        name: server
+        value: endjinsynmdp01devuks-ondemand.sql.azuresynapse.net

@@ -14,3 +14,15 @@ cloudConnections:
       users:
         - endjineers@endjin.com
       reshareUsers: []
+  - displayName: Development SQL
+    type: SQL
+    useServicePrincipal: development
+    target:
+      useTarget: sql.dev
+    permissions:
+      owners:
+        - jessica.hill@endjin.com
+      users:
+        - james.dawson@endjin.com
+      reshareUsers:
+        - endjineers@endjin.com
